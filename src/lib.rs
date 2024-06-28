@@ -1,4 +1,5 @@
-use std::fmt::{Display, Formatter};
+use std::fmt::Display;
+
 use wasm_bindgen::prelude::*;
 
 mod utils;
@@ -23,22 +24,6 @@ pub struct Universe {
     width: u32,
     height: u32,
     cells: Vec<Cell>,
-}
-
-impl Display for Universe {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        for row in self.cells.as_slice().chunks(self.width as usize) {
-            for &cell in row {
-                let symbol = if cell == Cell::Dead { '◻' } else { '◼' };
-
-                write!(f, "{}", symbol)?;
-            }
-
-            writeln!(f)?;
-        }
-
-        Ok(())
-    }
 }
 
 impl Default for Universe {
