@@ -29,8 +29,41 @@ impl Universe {
         self.width
     }
 
+    pub fn set_width(&mut self, width: u32) {
+        if self.width == width {
+            return;
+        }
+
+        self.width = width;
+
+        self.update_cells_size()
+    }
+
     pub fn height(&self) -> u32 {
         self.height
+    }
+
+    pub fn set_height(&mut self, height: u32) {
+        if self.height == height {
+            return;
+        }
+
+        self.height = height;
+
+        self.update_cells_size()
+    }
+
+    // Updates size of the universe.
+    // Resets all cells to the dead state.
+    fn update_cells_size(&mut self) {
+        let size = (self.width * self.height) as usize;
+
+        if self.cells.len() > size {
+            self.cells = FixedBitSet::with_capacity(size);
+        } else {
+            // self.cells.clear();
+            self.cells.grow(size);
+        }
     }
 
     pub fn cells(&self) -> *const usize {

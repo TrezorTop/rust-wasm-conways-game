@@ -1,9 +1,6 @@
 import {memory} from "../../wasm-pkg/rust_wasm_conways_game_bg.wasm";
 import {universe} from "../universe/universe.ts";
 
-const width = universe.width();
-const height = universe.height();
-
 const CELL_SIZE = 10; // px
 const GRID_COLOR = "#CCCCCC";
 const DEAD_COLOR = "#FFFFFF";
@@ -21,10 +18,13 @@ if (!ctx) {
     throw Error("Canvas context not found");
 }
 
-canvas.height = (CELL_SIZE + 1) * height + 1;
-canvas.width = (CELL_SIZE + 1) * width + 1;
-
 const drawGrid = () => {
+    const width = universe.width();
+    const height = universe.height();
+
+    canvas.height = (CELL_SIZE + 1) * height + 1;
+    canvas.width = (CELL_SIZE + 1) * width + 1;
+
     ctx.beginPath();
     ctx.strokeStyle = GRID_COLOR;
 
@@ -43,7 +43,7 @@ const drawGrid = () => {
     ctx.stroke();
 }
 
-const getIndex = (row: number, column: number) => {
+const getIndex = (row: number, column: number, width: number) => {
     return row * width + column;
 };
 
@@ -54,6 +54,9 @@ const bitIsSet = (n: number, arr: Uint8Array) => {
 };
 
 const drawCells = () => {
+    const width = universe.width();
+    const height = universe.height();
+
     // To draw the cells, we get a pointer to the universe's cells, construct a Uint8Array overlaying the cells buffer,
     // iterate over each cell, and draw a white or black rectangle depending on whether the cell is dead or alive, respectively
     const cellsPtr = universe.cells();
@@ -64,7 +67,7 @@ const drawCells = () => {
 
     for (let row = 0; row < height; row++) {
         for (let col = 0; col < width; col++) {
-            const index = getIndex(row, col);
+            const index = getIndex(row, col, width);
 
             ctx.fillStyle = bitIsSet(index, cells) ? ALIVE_COLOR : DEAD_COLOR;
 

@@ -1,7 +1,6 @@
 import {renderCanvas} from "./canvas/canvas.ts";
 import {universe} from "./universe/universe.ts";
 
-
 const renderLoop = () => {
     universe.tick();
 
@@ -9,7 +8,7 @@ const renderLoop = () => {
 
     setTimeout(() => {
         requestAnimationFrame(renderLoop);
-    }, 75);
+    }, 25);
 };
 
 renderCanvas()
