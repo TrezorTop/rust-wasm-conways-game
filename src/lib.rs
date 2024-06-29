@@ -129,28 +129,34 @@ impl Universe {
 
     fn live_neighbor_count(&self, row: u32, column: u32) -> u8 {
         let mut count = 0;
-
-        for delta_row in [-1, 0, 1].iter() {
-            for delta_col in [-1, 0, 1].iter() {
+        for delta_row in [self.height - 1, 0, 1].iter() {
+            for delta_col in [self.width - 1, 0, 1].iter() {
                 if *delta_row == 0 && *delta_col == 0 {
                     continue;
                 }
 
-                let row_index = (row as i32 + delta_row) as u32;
-                let col_index = (column as i32 + delta_col) as u32;
-
-                // For example, if self.height is 10 and row_index is -1 (indicating the cell above the first row),
-                // (-1 + 10) % 10 equals 9, which is the index of the last row.
-                // So, the cell above the first row is considered to be the last row
-                let neighbor_row = (row_index + self.height) % self.height;
-                let neighbor_col = (col_index + self.width) % self.width;
+                let neighbor_row = (row + delta_row) % self.height;
+                let neighbor_col = (column + delta_col) % self.width;
+                
                 let index = self.get_index(neighbor_row, neighbor_col);
-                // The as u8 cast converts the Cell enum value to an integer.
-                // If the cell is Dead, it will be converted to 0, and if it's Alive, it will be converted to 1.
+                
                 count += self.cells[index] as u8;
             }
         }
-
         count
+    }
+}
+
+impl Universe {
+    pub fn get_cells(&self) -> &FixedBitSet {
+        &self.cells
+    }
+
+    pub fn set_alive_cells(&mut self, cells: &[(u32, u32)]) {
+        cells.iter().for_each(|(row, col)| {
+            let index = self.get_index(*row, *col);
+
+            self.cells.set(index, true);
+        })
     }
 }
