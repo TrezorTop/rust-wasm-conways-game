@@ -1,5 +1,4 @@
 import {memory} from "../../wasm-pkg/rust_wasm_conways_game_bg.wasm";
-import {Cell} from "../../wasm-pkg";
 import {universe} from "../universe/universe.ts";
 
 const width = universe.width();
@@ -48,11 +47,18 @@ const getIndex = (row: number, column: number) => {
     return row * width + column;
 };
 
+const bitIsSet = (n: number, arr: Uint8Array) => {
+    const byte = Math.floor(n / 8);
+    const mask = 1 << (n % 8);
+    return (arr[byte] & mask) === mask;
+};
+
 const drawCells = () => {
     // To draw the cells, we get a pointer to the universe's cells, construct a Uint8Array overlaying the cells buffer,
     // iterate over each cell, and draw a white or black rectangle depending on whether the cell is dead or alive, respectively
     const cellsPtr = universe.cells();
-    const cells = new Uint8Array(memory.buffer, cellsPtr, width * height);
+    // width * height / 8 since we have a cell per bit rather than per byte
+    const cells = new Uint8Array(memory.buffer, cellsPtr, width * height / 8);
 
     ctx.beginPath();
 
@@ -60,7 +66,7 @@ const drawCells = () => {
         for (let col = 0; col < width; col++) {
             const index = getIndex(row, col);
 
-            ctx.fillStyle = cells[index] === Cell.Dead ? DEAD_COLOR : ALIVE_COLOR;
+            ctx.fillStyle = bitIsSet(index, cells) ? ALIVE_COLOR : DEAD_COLOR;
 
             ctx.fillRect(
                 col * (CELL_SIZE + 1) + 1,
