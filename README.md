@@ -39,7 +39,7 @@ First, compile the Rust code to WebAssembly (you can skip this step if you don't
 wasm-pack build
 ```
 
-Then, install the npm dependencies:
+Then, install the `npm` dependencies:
 
 ```bash
 cd app
