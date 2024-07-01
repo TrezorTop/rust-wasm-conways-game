@@ -1,4 +1,3 @@
-// Construct the universe, and get its width and height.
-import {Universe} from "../../wasm-pkg";
+import { Universe } from "wasm-pkg/web_assembly_binary.js";
 
 export const universe = Universe.new();
