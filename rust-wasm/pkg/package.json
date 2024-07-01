@@ -1,0 +1,19 @@
+{
+  "name": "web-assembly-binary",
+  "collaborators": [
+    "Andrey Seluykov <trezortop92@gmail.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "web_assembly_binary_bg.wasm",
+    "web_assembly_binary.js",
+    "web_assembly_binary_bg.js",
+    "web_assembly_binary.d.ts"
+  ],
+  "module": "web_assembly_binary.js",
+  "types": "web_assembly_binary.d.ts",
+  "sideEffects": [
+    "./web_assembly_binary.js",
+    "./snippets/*"
+  ]
+}
