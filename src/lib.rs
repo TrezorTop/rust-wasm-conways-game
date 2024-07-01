@@ -25,6 +25,27 @@ impl Default for Universe {
 /// Public methods, exported to JavaScript.
 #[wasm_bindgen]
 impl Universe {
+    pub fn new() -> Universe {
+        utils::set_panic_hook();
+
+        let width = 64;
+        let height = 64;
+
+        let size = (width * height) as usize;
+
+        let mut cells = FixedBitSet::with_capacity(size);
+
+        for i in 0..size {
+            cells.set(i, js_sys::Math::random() < 0.5)
+        }
+
+        Universe {
+            width,
+            height,
+            cells,
+        }
+    }
+
     pub fn width(&self) -> u32 {
         self.width
     }
@@ -68,25 +89,6 @@ impl Universe {
 
     pub fn cells(&self) -> *const usize {
         self.cells.as_slice().as_ptr()
-    }
-
-    pub fn new() -> Universe {
-        let width = 64;
-        let height = 64;
-
-        let size = (width * height) as usize;
-
-        let mut cells = FixedBitSet::with_capacity(size);
-
-        for i in 0..size {
-            cells.set(i, js_sys::Math::random() < 0.5)
-        }
-
-        Universe {
-            width,
-            height,
-            cells,
-        }
     }
 
     pub fn tick(&mut self) {
@@ -137,9 +139,9 @@ impl Universe {
 
                 let neighbor_row = (row + delta_row) % self.height;
                 let neighbor_col = (column + delta_col) % self.width;
-                
+
                 let index = self.get_index(neighbor_row, neighbor_col);
-                
+
                 count += self.cells[index] as u8;
             }
         }
