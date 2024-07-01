@@ -29,7 +29,7 @@ The TypeScript code is located in the `app/src` directory. The `main.ts` file is
 
 ## Running the Project
 
-Compiled .wasm modules are already available in the repository, but you can compile them yourself if you have Rust and `wasm-pack` installed.
+Compiled `.wasm` modules are already available in the repository, but you can compile it again yourself if you have Rust and `wasm-pack` installed.
 
 To run the project, you must have at least and `npm` installed.
 
