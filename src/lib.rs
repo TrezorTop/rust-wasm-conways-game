@@ -35,15 +35,15 @@ impl Universe {
     pub fn new() -> Universe {
         utils::set_panic_hook();
 
-        let width = 256;
-        let height = 256;
+        let width = 32;
+        let height = 32;
 
         let size = (width * height) as usize;
 
         let mut cells = FixedBitSet::with_capacity(size);
 
         for i in 0..size {
-            cells.set(i, js_sys::Math::random() < 0.5)
+            cells.set(i, false)
         }
 
         Universe {
@@ -51,6 +51,18 @@ impl Universe {
             height,
             cells,
         }
+    }
+
+    pub fn reset(&mut self) {
+        let size = (self.width * self.height) as usize;
+
+        for i in 0..size {
+            self.cells.set(i, js_sys::Math::random() < 0.5);
+        }
+    }
+    
+    pub fn clear(&mut self) {
+        self.cells.clear();
     }
 
     pub fn width(&self) -> u32 {
@@ -96,6 +108,12 @@ impl Universe {
 
     pub fn cells(&self) -> *const usize {
         self.cells.as_slice().as_ptr()
+    }
+
+    pub fn toggle_cell(&mut self, row: u32, col: u32) {
+        let index = self.get_index(row, col);
+
+        self.cells.toggle(index);
     }
 
     pub fn tick(&mut self) {

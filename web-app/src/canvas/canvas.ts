@@ -1,7 +1,7 @@
 import {universe} from "../universe/universe.ts";
 import {memory} from "wasm-pkg/web_assembly_binary_bg.wasm";
 
-const CELL_SIZE = 2
+const CELL_SIZE = 15
 const GRID_COLOR = "#CCCCCC";
 const DEAD_COLOR = "#FFFFFF";
 const ALIVE_COLOR = "#000000";
@@ -10,6 +10,23 @@ const canvas = document.querySelector<HTMLCanvasElement>("#canvas");
 
 if (!canvas) {
     throw Error("Canvas element not found");
+}
+
+canvas.onclick = (event) => {
+    const boundingRect = canvas.getBoundingClientRect();
+
+    const scaleX = canvas.width / boundingRect.width;
+    const scaleY = canvas.height / boundingRect.height;
+
+    const canvasLeft = (event.clientX - boundingRect.left) * scaleX;
+    const canvasTop = (event.clientY - boundingRect.top) * scaleY;
+
+    const row = Math.min(Math.floor(canvasTop / (CELL_SIZE + 1)), universe.height() - 1);
+    const col = Math.min(Math.floor(canvasLeft / (CELL_SIZE + 1)), universe.width() - 1);
+
+    universe.toggle_cell(row, col);
+
+    renderCanvas();
 }
 
 const ctx = canvas.getContext('2d');

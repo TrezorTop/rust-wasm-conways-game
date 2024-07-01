@@ -1,7 +1,8 @@
 #![cfg(target_arch = "wasm32")]
 
-use rust_wasm_conways_game::Universe;
+
 use wasm_bindgen_test::*;
+use web_assembly_binary::Universe;
 
 wasm_bindgen_test_configure!(run_in_browser);
 
