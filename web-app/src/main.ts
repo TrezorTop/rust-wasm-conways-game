@@ -5,10 +5,8 @@ const renderLoop = () => {
     universe.tick();
 
     renderCanvas()
-
-    setTimeout(() => {
-        requestAnimationFrame(renderLoop);
-    }, 25);
+    
+    requestAnimationFrame(renderLoop);
 };
 
 renderCanvas()

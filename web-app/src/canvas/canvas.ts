@@ -1,7 +1,7 @@
-import {memory} from "../../wasm-pkg/rust_wasm_conways_game_bg.wasm";
 import {universe} from "../universe/universe.ts";
+import {memory} from "wasm-pkg/web_assembly_binary_bg.wasm";
 
-const CELL_SIZE = 10; // px
+const CELL_SIZE = 2
 const GRID_COLOR = "#CCCCCC";
 const DEAD_COLOR = "#FFFFFF";
 const ALIVE_COLOR = "#000000";

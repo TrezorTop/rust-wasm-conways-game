@@ -1,5 +1,5 @@
 [package]
-name = "rust-wasm-conways-game"
+name = "web-assembly-binary"
 version = "0.1.0"
 authors = ["Andrey Seluykov <trezortop92@gmail.com>"]
 edition = "2018"
@@ -13,7 +13,6 @@ default = ["console_error_panic_hook"]
 [dependencies]
 wasm-bindgen = "0.2.92"
 js-sys = "0.3.69"
-web-sys = "0.3.69"
 fixedbitset = "0.5.7"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
@@ -28,6 +27,10 @@ console_error_panic_hook = { version = "0.1.7", optional = true }
 #
 # Unfortunately, `wee_alloc` requires nightly Rust when targeting wasm for now.
 wee_alloc = { version = "0.4.5", optional = true }
+
+[dependencies.web-sys]
+version = "0.3.69"
+features = ["console"]
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.42"
