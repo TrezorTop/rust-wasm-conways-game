@@ -29,15 +29,17 @@ The TypeScript code is located in the `app/src` directory. The `main.ts` file is
 
 ## Running the Project
 
-To run the project, you need to have Rust, `wasm-pack`, and npm installed.
+Compiled `.wasm` modules are already available in the repository, but you can compile it again yourself if you have Rust and `wasm-pack` installed.
 
-First, compile the Rust code to WebAssembly:
+To run the project, you must have at least and `npm` installed.
+
+First, compile the Rust code to WebAssembly (you can skip this step if you don't have Rust and `wasm-pack` installed):
 
 ```bash
 wasm-pack build
 ```
 
-Then, install the npm dependencies:
+Then, install the `npm` dependencies:
 
 ```bash
 cd app
