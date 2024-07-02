@@ -212,6 +212,14 @@ export class Universe {
     }
 }
 
+export function __wbg_time_2c9ba8df2c0b364e(arg0, arg1) {
+    console.time(getStringFromWasm0(arg0, arg1));
+};
+
+export function __wbg_timeEnd_d6fcb4eac2e76fb9(arg0, arg1) {
+    console.timeEnd(getStringFromWasm0(arg0, arg1));
+};
+
 export function __wbindgen_object_drop_ref(arg0) {
     takeObject(arg0);
 };

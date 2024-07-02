@@ -1,3 +1,4 @@
+use std::mem;
 use fixedbitset::FixedBitSet;
 use wasm_bindgen::prelude::*;
 
@@ -16,11 +17,31 @@ macro_rules! console_log {
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
+pub struct Timer<'a> {
+    name: &'a str,
+}
+
+impl<'a> Timer<'a> {
+    pub fn new(name: &'a str) -> Timer<'a> {
+        web_sys::console::time_with_label(name);
+
+        Timer { name }
+    }
+}
+
+impl<'a> Drop for Timer<'a> {
+    fn drop(&mut self) {
+        web_sys::console::time_end_with_label(self.name);
+    }
+}
+
 #[wasm_bindgen]
 pub struct Universe {
     width: u32,
     height: u32,
     cells: FixedBitSet,
+    // buffering the next generation for cells
+    next_cells: FixedBitSet,
 }
 
 impl Default for Universe {
@@ -35,12 +56,13 @@ impl Universe {
     pub fn new() -> Universe {
         utils::set_panic_hook();
 
-        let width = 32;
-        let height = 32;
+        let width = 128;
+        let height = 128;
 
         let size = (width * height) as usize;
 
         let mut cells = FixedBitSet::with_capacity(size);
+        let next_cells = cells.clone();
 
         for i in 0..size {
             cells.set(i, false)
@@ -50,6 +72,7 @@ impl Universe {
             width,
             height,
             cells,
+            next_cells,
         }
     }
 
@@ -60,7 +83,7 @@ impl Universe {
             self.cells.set(i, js_sys::Math::random() < 0.5);
         }
     }
-    
+
     pub fn clear(&mut self) {
         self.cells.clear();
     }
@@ -117,7 +140,7 @@ impl Universe {
     }
 
     pub fn tick(&mut self) {
-        let mut next_generation = self.cells.clone();
+        Timer::new("Universe::tick");
 
         for row in 0..self.height {
             for col in 0..self.width {
@@ -125,7 +148,7 @@ impl Universe {
                 let cell = self.cells[index];
                 let live_neighbors = self.live_neighbor_count(row, col);
 
-                next_generation.set(
+                self.next_cells.set(
                     index,
                     match (cell, live_neighbors) {
                         // Rule 1: Any live cell with fewer than two live neighbours
@@ -147,7 +170,8 @@ impl Universe {
             }
         }
 
-        self.cells = next_generation;
+        // Swap cells and next_cells instead of cloning
+        mem::swap(&mut self.cells, &mut self.next_cells);
     }
 
     fn get_index(&self, row: u32, column: u32) -> usize {
@@ -156,20 +180,47 @@ impl Universe {
 
     fn live_neighbor_count(&self, row: u32, column: u32) -> u8 {
         let mut count = 0;
-        for delta_row in [self.height - 1, 0, 1].iter() {
-            for delta_col in [self.width - 1, 0, 1].iter() {
-                if *delta_row == 0 && *delta_col == 0 {
-                    continue;
-                }
 
-                let neighbor_row = (row + delta_row) % self.height;
-                let neighbor_col = (column + delta_col) % self.width;
+        let north = if row == 0 { self.height - 1 } else { row - 1 };
 
-                let index = self.get_index(neighbor_row, neighbor_col);
+        let south = if row == self.height - 1 { 0 } else { row + 1 };
 
-                count += self.cells[index] as u8;
-            }
-        }
+        let west = if column == 0 {
+            self.width - 1
+        } else {
+            column - 1
+        };
+
+        let east = if column == self.width - 1 {
+            0
+        } else {
+            column + 1
+        };
+
+        let nw = self.get_index(north, west);
+        count += self.cells[nw] as u8;
+
+        let n = self.get_index(north, column);
+        count += self.cells[n] as u8;
+
+        let ne = self.get_index(north, east);
+        count += self.cells[ne] as u8;
+
+        let w = self.get_index(row, west);
+        count += self.cells[w] as u8;
+
+        let e = self.get_index(row, east);
+        count += self.cells[e] as u8;
+
+        let sw = self.get_index(south, west);
+        count += self.cells[sw] as u8;
+
+        let s = self.get_index(south, column);
+        count += self.cells[s] as u8;
+
+        let se = self.get_index(south, east);
+        count += self.cells[se] as u8;
+
         count
     }
 }
