@@ -4,6 +4,8 @@
 }
 
 body {
+    position: relative;
+
     width: 100dvw;
     height: 100dvh;
     display: flex;
@@ -16,4 +18,17 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.fps {
+    width: 175px;
+    font-family: monospace;
+
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+
+    position: absolute;
+    padding: 8px;
+    top: 0;
+    right: 0;
 }
