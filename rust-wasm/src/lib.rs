@@ -120,35 +120,26 @@ impl Universe {
     pub fn tick(&mut self) {
         Timer::new("Universe::tick");
 
-        for row in 0..self.height {
-            for col in 0..self.width {
-                let index = self.get_index(row, col);
-                let cell = self.cells[index];
-                let live_neighbors = self.live_neighbor_count(row, col);
+        let size = (self.width * self.height) as usize;
+        for i in 0..size {
+            let row = (i as u32) / self.width;
+            let col = (i as u32) % self.width;
+            let cell = self.cells[i];
+            let live_neighbors = self.live_neighbor_count(row, col);
 
-                self.next_cells.set(
-                    index,
-                    match (cell, live_neighbors) {
-                        // Rule 1: Any live cell with fewer than two live neighbours
-                        // dies, as if caused by underpopulation.
-                        (true, x) if x < 2 => false,
-                        // Rule 2: Any live cell with two or three live neighbours
-                        // lives on to the next generation.
-                        (true, 2) | (true, 3) => true,
-                        // Rule 3: Any live cell with more than three live
-                        // neighbours dies, as if by overpopulation.
-                        (true, x) if x > 3 => false,
-                        // Rule 4: Any dead cell with exactly three live neighbours
-                        // becomes a live cell, as if by reproduction.
-                        (false, 3) => true,
-                        // All other cells remain in the same state.
-                        (otherwise, _) => otherwise,
-                    },
-                );
-            }
+            self.next_cells.set(
+                i,
+                match (cell, live_neighbors) {
+                    (true, x) if x < 2 => false,
+                    (true, 2) | (true, 3) => true,
+                    (true, x) if x > 3 => false,
+                    (false, 3) => true,
+                    (otherwise, _) => otherwise
+                }
+            );
         }
 
-        // Swap cells and next_cells instead of cloning
+        // Swap current cells with next cells
         mem::swap(&mut self.cells, &mut self.next_cells);
     }
 
