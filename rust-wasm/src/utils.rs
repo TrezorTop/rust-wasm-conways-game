@@ -9,6 +9,23 @@ pub fn set_panic_hook() {
     console_error_panic_hook::set_once();
 }
 
+/// A timer struct that measures the duration of a block of code.
+///
+/// The `Timer` struct is used to measure the duration of a block of code by
+/// calling `web_sys::console::time_with_label()` when the `Timer` is created,
+/// and `web_sys::console::time_end_with_label()` when the `Timer` is dropped.
+/// This allows you to easily measure the performance of your code in the
+/// browser's developer console.
+///
+/// # Example
+/// 
+/// use utils::Timer;
+///
+/// fn do_something() {
+///     let _timer = Timer::new("do_something");
+///     // do something that you want to time
+/// }
+/// 
 pub struct Timer<'a> {
     name: &'a str,
 }

@@ -1,11 +1,16 @@
 #![cfg(target_arch = "wasm32")]
 
-
 use wasm_bindgen_test::*;
 use web_assembly_binary::Universe;
 
 wasm_bindgen_test_configure!(run_in_browser);
 
+/// Creates a new `Universe` instance with a 6x6 grid and the following alive cells:
+/// - (1, 2)
+/// - (2, 3)
+/// - (3, 1)
+/// - (3, 2)
+/// - (3, 3)
 #[cfg(test)]
 pub fn input_universe() -> Universe {
     let mut universe = Universe::new();
@@ -18,6 +23,12 @@ pub fn input_universe() -> Universe {
     universe
 }
 
+/// Creates a new `Universe` instance with a 6x6 grid and the following alive cells:
+/// - (2, 1)
+/// - (2, 3)
+/// - (3, 2)
+/// - (3, 3)
+/// - (4, 2)
 #[cfg(test)]
 pub fn expected_universe() -> Universe {
     let mut universe = Universe::new();
@@ -30,6 +41,8 @@ pub fn expected_universe() -> Universe {
     universe
 }
 
+/// Tests the `tick()` method of the `Universe` struct by creating an input universe,
+/// calling `tick()` on it, and asserting that the resulting state matches the expected universe.
 #[wasm_bindgen_test]
 pub fn test_tick() {
     let mut input_universe = input_universe();
