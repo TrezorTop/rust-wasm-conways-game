@@ -1,3 +1,8 @@
+/**
+ * Manages and displays the current frames per second (FPS) of the application.
+ * Tracks the last 100 frames and calculates the latest, average, minimum, and maximum FPS.
+ * Displays the FPS information in an HTML element with the class 'fps'.
+ */
 export const fps = new class {
   fps: HTMLDivElement | null;
   frames: number[];
@@ -9,6 +14,11 @@ export const fps = new class {
     this.lastFrameTimeStamp = performance.now();
   }
 
+  /**
+   * Renders the current frames per second (FPS) information and updates the display.
+   * Calculates the latest, average, minimum, and maximum FPS based on the last 100 frames.
+   * Updates the FPS display element with the calculated values.
+   */
   render() {
     const now = performance.now();
     const delta = now - this.lastFrameTimeStamp;

@@ -56,12 +56,23 @@ if (clearButton) {
   }
 }
 
+/**
+ * Requests the next frame of the animation loop.
+ * If an animation ID is currently set, it will request the next frame using `requestAnimationFrame`.
+ * Otherwise, it will not schedule the next frame.
+ */
 const requestFrame = () => {
   if (!animationId) return;
 
   animationId = requestAnimationFrame(renderLoop);
 }
 
+/**
+ * The main render loop for the application.
+ * This function is responsible for updating the game state, rendering the canvas, and scheduling the next frame.
+ * If a timeout is set, it will use setTimeout to schedule the next frame after the timeout expires.
+ * Otherwise, it will use requestAnimationFrame to schedule the next frame.
+ */
 const renderLoop = () => {
   fps.render();
   if (timeoutId) clearTimeout(timeoutId);

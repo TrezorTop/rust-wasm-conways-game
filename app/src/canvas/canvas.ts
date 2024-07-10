@@ -8,6 +8,12 @@ const ALIVE_COLOR = "#000000";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#canvas");
 
+/**
+ * Handles the click event on the canvas element. Calculates the row and column of the clicked cell based on the mouse coordinates,
+ * and toggles the state of the cell in the universe.
+ *
+ * @param event - The click event object.
+ */
 if (!canvas) {
   throw Error("Canvas element not found");
 }
@@ -35,6 +41,11 @@ if (!ctx) {
   throw Error("Canvas context not found");
 }
 
+/**
+ * Draws the grid lines on the canvas.
+ * The grid lines are drawn based on the width and height of the universe, with each cell represented by a square of size `CELL_SIZE`.
+ * The grid lines are drawn in the `GRID_COLOR`.
+ */
 const drawGrid = () => {
   const width = universe.width();
   const height = universe.height();
@@ -60,16 +71,38 @@ const drawGrid = () => {
   ctx.stroke();
 }
 
+/**
+ * Calculates the index of a cell in the universe's cells array based on its row and column coordinates.
+ *
+ * @param row - The row of the cell.
+ * @param column - The column of the cell.
+ * @param width - The width of the universe.
+ * @returns The index of the cell in the universe's cells array.
+ */
 const getIndex = (row: number, column: number, width: number) => {
   return row * width + column;
 };
 
+/**
+ * Checks if a bit is set in a Uint8Array at the given index.
+ *
+ * @param n - The index of the bit to check.
+ * @param arr - The Uint8Array to check the bit in.
+ * @returns `true` if the bit is set, `false` otherwise.
+ */
 const bitIsSet = (n: number, arr: Uint8Array) => {
   const byte = Math.floor(n / 8);
   const mask = 1 << (n % 8);
   return (arr[byte] & mask) === mask;
 };
 
+/**
+ * Renders the cells on the canvas based on the state of the universe.
+ *
+ * This function first gets a pointer to the universe's cells, constructs a Uint8Array overlaying the cells buffer,
+ * and then iterates over each cell in the universe. It draws a white or black rectangle for each cell depending on
+ * whether the cell is dead or alive, respectively.
+ */
 const drawCells = () => {
   const width = universe.width();
   const height = universe.height();
@@ -123,6 +156,9 @@ const drawCells = () => {
   ctx.stroke();
 }
 
+/**
+ * Renders the canvas by drawing the grid and the cells.
+ */
 export const renderCanvas = () => {
   drawGrid();
   drawCells();
